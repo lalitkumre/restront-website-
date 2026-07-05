@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <meta name="description" content="7/12 Family Restaurant Nagpur - Premium fine dining, reserve table, order online.">
+  <title>7/12 Family Restaurant | Nagpur Luxury Dining</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ----- CSS VARIABLES & RESET ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #1B1B1B;
+      --secondary: #2D2D2D;
+      --accent: #D4A017;
+      --accent-light: #e7b32e;
+      --background: #F8F6F2;
+      --white: #FFFFFF;
+      --dark: #111111;
+      --text-muted: #5A5A5A;
+      --card-shadow: 0 25px 45px rgba(0,0,0,0.04), 0 10px 20px rgba(0,0,0,0.05);
+      --hover-shadow: 0 35px 55px rgba(0,0,0,0.08), 0 15px 25px rgba(0,0,0,0.07);
+      --transition-smooth: cubic-bezier(0.22, 0.61, 0.36, 1);
+      --font-playfair: 'Playfair Display', serif;
+      --font-poppins: 'Poppins', sans-serif;
+      --font-inter: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--primary);
+      font-family: var(--font-inter);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, .font-playfair {
+      font-family: var(--font-playfair);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 7px; }
+    ::-webkit-scrollbar-track { background: #EAE7E0; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #F8F6F2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      transition: opacity 0.9s ease, visibility 0.9s ease;
+    }
+    .loader-logo {
+      font-family: var(--font-playfair);
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+      animation: logoPop 0.8s ease forwards;
+    }
+    .loader-logo span { color: var(--accent); }
+    .progress-bar {
+      width: 260px;
+      height: 4px;
+      background: #ddd8ce;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 20px;
+      animation: loadProgress 2s ease forwards;
+    }
+    @keyframes logoPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      padding: 20px 0;
+      transition: all 0.4s ease;
+      background: transparent;
+    }
+    .navbar.scrolled {
+      background: rgba(248, 246, 242, 0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      padding: 14px 0;
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .logo {
+      font-family: var(--font-playfair);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 2px;
+    }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 36px; align-items: center; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 500;
+      font-size: 1rem;
+      transition: 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .btn-reserve {
+      background: var(--accent);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 12px 20px -8px rgba(212,160,23,0.4);
+    }
+    .btn-reserve:hover { background: #b8860b; transform: translateY(-3px); }
+    .mobile-menu-icon { display: none; font-size: 2rem; cursor: pointer; }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      position: relative;
+      perspective: 1000px;
+    }
+    .hero-content {
+      max-width: 800px;
+      color: white;
+      transform-style: preserve-3d;
+      animation: floatIn 1.3s ease;
+    }
+    @keyframes floatIn { 0% { opacity: 0; transform: translateZ(-60px) translateY(40px); } 100% { opacity: 1; transform: translateZ(0) translateY(0); } }
+    .hero h1 {
+      font-size: 4.8rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      text-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    }
+    .hero p { font-size: 1.4rem; margin-bottom: 45px; opacity: 0.92; }
+    .hero-buttons { display: flex; gap: 22px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent);
+      border: none;
+      padding: 17px 38px;
+      border-radius: 50px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 18px 28px rgba(212,160,23,0.35);
+      font-size: 1rem;
+    }
+    .btn-outline-white {
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      padding: 17px 38px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    /* Sections */
+    .section { padding: 110px 0; }
+    .section-title {
+      font-size: 2.8rem;
+      margin-bottom: 25px;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 70px;
+      height: 4px;
+      background: var(--accent);
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .card-3d {
+      background: var(--white);
+      border-radius: 32px;
+      padding: 32px 28px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.45s ease;
+      transform-style: preserve-3d;
+      transform: perspective(1200px) rotateX(0deg) rotateY(0deg);
+    }
+    .card-3d:hover {
+      transform: perspective(1200px) rotateX(1deg) rotateY(-1.5deg) translateZ(15px);
+      box-shadow: var(--hover-shadow);
+    }
+
+    .menu-card {
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: 0.4s;
+    }
+    .menu-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .menu-card:hover img { transform: scale(1.05); }
+
+    .footer {
+      background: #0f0f0f;
+      color: #bbb;
+      padding: 70px 0 40px;
+    }
+
+    @media (max-width: 992px) {
+      .grid-3col { grid-template-columns: repeat(2,1fr); }
+      .nav-links { display: none; }
+      .mobile-menu-icon { display: block; }
+    }
+    @media (max-width: 640px) {
+      .grid-3col { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.8rem; }
+      .container { padding: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+    <div class="loader-logo">7/12<span>.</span></div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <p style="font-family:Inter; color:#4a4a4a; margin-top:16px;">Family Restaurant · Nagpur</p>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="logo">7/12 <span>FAMILY</span></div>
+      <div class="nav-links" id="navLinks">
+        <a href="#hero">Home</a>
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#reservation">Reserve</a>
+        <a href="#order">Order</a>
+      </div>
+      <button class="btn-reserve" onclick="scrollToSection('reservation')">Book Table</button>
+      <div class="mobile-menu-icon" id="mobileToggle">☰</div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Where Every Meal Feels Like Home</h1>
+        <p>⭐ 4.5 (458 Reviews) · Serving delicious food with love in Nagpur.</p>
+        <div class="hero-buttons">
+          <button class="btn-primary" onclick="scrollToSection('reservation')">Reserve Table</button>
+          <button class="btn-outline-white" onclick="scrollToSection('menu')">View Menu</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="section-title">Our Story</h2>
+      <div class="grid-3col" style="margin-top:50px;">
+        <div class="card-3d">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1974&auto=format&fit=crop" alt="Restaurant interior" style="width:100%; height:180px; object-fit:cover; border-radius:20px; margin-bottom:18px;">
+          <h3>Family Tradition</h3>
+          <p>Since 1998, bringing authentic flavors to Nagpur with love and tradition.</p>
+        </div>
+        <div class="card-3d">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop" alt="Chef cooking" style="width:100%; height:180px; object-fit:cover; border-radius:20px; margin-bottom:18px;">
+          <h3>Our Mission</h3>
+          <p>Fresh ingredients, warm hospitality, and an unforgettable dining experience.</p>
+        </div>
+        <div class="card-3d">
+          <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?q=80&w=1974&auto=format&fit=crop" alt="Family dining" style="width:100%; height:180px; object-fit:cover; border-radius:20px; margin-bottom:18px;">
+          <h3>Core Values</h3>
+          <p>Hygiene, quality, and community – the heart of 7/12 Family Restaurant.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="section" style="background:#ffffff;">
+    <div class="container">
+      <h2 class="section-title">Why Choose Us</h2>
+      <div class="grid-3col" style="margin-top:50px;">
+        <div class="card-3d" style="text-align:center;">🍃<h3>Fresh Ingredients</h3><p>Locally sourced daily</p></div>
+        <div class="card-3d" style="text-align:center;">👨‍🍳<h3>Expert Chefs</h3><p>20+ years experience</p></div>
+        <div class="card-3d" style="text-align:center;">👨‍👩‍👧<h3>Family Friendly</h3><p>Kids menu & play area</p></div>
+        <div class="card-3d" style="text-align:center;">⚡<h3>Fast Service</h3><p>Under 20 minutes</p></div>
+        <div class="card-3d" style="text-align:center;">🧼<h3>Hygienic Kitchen</h3><p>5-star safety rating</p></div>
+        <div class="card-3d" style="text-align:center;">🍽️<h3>Premium Dining</h3><p>Luxury ambiance</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU SECTION with real images -->
+  <section id="menu" class="section">
+    <div class="container">
+      <h2 class="section-title">Our Menu</h2>
+      <div class="grid-3col" id="menuContainer" style="margin-top:50px;"></div>
+    </div>
+  </section>
+
+  <!-- RESERVATION -->
+  <section id="reservation" class="section" style="background:white;">
+    <div class="container">
+      <h2 class="section-title">Reserve a Table</h2>
+      <form id="reservationForm" style="max-width:620px; margin-top:40px;">
+        <input type="text" placeholder="Full Name" required style="width:100%; padding:16px; margin:12px 0; border-radius:30px; border:1px solid #ddd;">
+        <input type="email" placeholder="Email" required style="width:100%; padding:16px; margin:12px 0; border-radius:30px;">
+        <input type="date" required style="width:100%; padding:16px; margin:12px 0; border-radius:30px;">
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:12px;">Confirm Reservation</button>
+      </form>
+      <div id="confirmationMsg" style="display:none; color:#2e7d32; margin-top:24px; font-weight:600;">✅ Table reserved! We'll contact you shortly.</div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="section">
+    <div class="container">
+      <h2 class="section-title">Gallery</h2>
+      <div class="grid-3col" style="margin-top:40px;">
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974&auto=format&fit=crop" alt="Restaurant ambiance" style="width:100%; border-radius:28px; height:250px; object-fit:cover;">
+        <img src="https://images.unsplash.com/photo-1579027989536-b7b1f875659b?q=80&w=2070&auto=format&fit=crop" alt="Food platter" style="width:100%; border-radius:28px; height:250px; object-fit:cover;">
+        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?q=80&w=2070&auto=format&fit=crop" alt="Private dining" style="width:100%; border-radius:28px; height:250px; object-fit:cover;">
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px;">
+      <div><strong>📍</strong> Service Road, Chinchbhavan, Wardha Road, Nagpur</div>
+      <div><strong>📞</strong> +91 98765 43210 | hello@712family.com</div>
+      <div>© 2025 7/12 Family Restaurant. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Loading screen
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loader = document.getElementById('loading-screen');
+          if (loader) {
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden';
+          }
+        }, 2100);
+      });
+
+      // Sticky navbar
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+      });
+
+      // Mobile toggle
+      const mobileToggle = document.getElementById('mobileToggle');
+      const navLinks = document.getElementById('navLinks');
+      mobileToggle?.addEventListener('click', () => {
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+      });
+
+      window.scrollToSection = (id) => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      // Real menu items with Unsplash food images
+      const menuItems = [
+        { name:"Butter Chicken", price:"₹420", rating:"4.7", desc:"Creamy tomato gravy, boneless", img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=2070&auto=format&fit=crop" },
+        { name:"Paneer Tikka", price:"₹350", rating:"4.6", desc:"Marinated cottage cheese", img:"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?q=80&w=2017&auto=format&fit=crop" },
+        { name:"Chicken Biryani", price:"₹380", rating:"4.8", desc:"Hyderabadi dum style", img:"https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=2070&auto=format&fit=crop" },
+        { name:"Dal Makhani", price:"₹290", rating:"4.5", desc:"Slow cooked black lentils", img:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=2070&auto=format&fit=crop" },
+        { name:"Gulab Jamun", price:"₹180", rating:"4.9", desc:"Soft milk dumplings", img:"https://images.unsplash.com/photo-1666190050267-af5475acbb9f?q=80&w=2070&auto=format&fit=crop" },
+        { name:"Veg Pizza", price:"₹320", rating:"4.4", desc:"Wood fired thin crust", img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop" }
+      ];
+
+      const menuContainer = document.getElementById('menuContainer');
+      if (menuContainer) {
+        menuItems.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'menu-card card-3d';
+          card.style.padding = '0';
+          card.innerHTML = `
+            <img src="${item.img}" alt="${item.name}" loading="lazy" style="height:210px;">
+            <div style="padding:22px;">
+              <h3 style="font-family:var(--font-playfair);">${item.name}</h3>
+              <p style="color:#5a5a5a;">${item.desc}</p>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+                <span style="font-weight:700; font-size:1.2rem;">${item.price}</span>
+                <span style="background:#f5f0e6; padding:4px 12px; border-radius:20px;">⭐ ${item.rating}</span>
+              </div>
+              <button class="btn-primary" style="margin-top:18px; width:100%; padding:14px;">Add to Cart</button>
+            </div>`;
+          menuContainer.appendChild(card);
+        });
+      }
+
+      // Reservation form
+      const form = document.getElementById('reservationForm');
+      const confirmMsg = document.getElementById('confirmationMsg');
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        confirmMsg.style.display = 'block';
+        form.reset();
+        setTimeout(() => { confirmMsg.style.display = 'none'; }, 4000);
+      });
+
+      // Toast notification
+      window.showToast = (msg) => {
+        const toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.position = 'fixed'; toast.style.bottom = '35px'; toast.style.right = '35px';
+        toast.style.background = '#1B1B1B'; toast.style.color = 'white'; toast.style.padding = '14px 28px';
+        toast.style.borderRadius = '40px'; toast.style.zIndex = '9999';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
+      };
+
+      document.querySelectorAll('.btn-primary').forEach(btn => {
+        if(btn.innerText.includes('Add to Cart')) {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showToast('🛒 Added to cart!');
+          });
+        }
+      });
+
+      // Scroll reveal animation
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.card-3d, .menu-card').forEach(el => {
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(35px)';
+        el.style.transition = '0.7s ease';
+        observer.observe(el);
+      });
+
+      console.log('✨ 7/12 Family Restaurant — premium experience active.');
+    })();
+  </script>
+</body>
+</html>
